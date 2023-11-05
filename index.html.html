@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch App</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+</head>
+
+<body>
+    <div id="app">
+        <h1>{{ formattedTime }}</h1>
+        <button @click="startStop">{{ isRunning ? 'Stop' : 'Start' }}</button>
+        <button @click="reset" :disabled="!isRunning && time === 0">Reset</button>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                isRunning: false,
+                time: 0
+            },
+            computed: {
+                formattedTime: function () {
+                    const minutes = Math.floor(this.time / 60000);
+                    const seconds = Math.floor((this.time % 60000) / 1000);
+                    const milliseconds = (this.time % 1000).toString().slice(0, 1);
+                    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}.${milliseconds}`;
+                }
+            },
+            methods: {
+                startStop: function () {
+                    this.isRunning = !this.isRunning;
+                    if (this.isRunning) {
+                        this.timer = setInterval(() => {
+                            this.time += 10;
+                        }, 10);
+                    } else {
+                        clearInterval(this.timer);
+                    }
+                },
+                reset: function () {
+                    this.time = 0;
+                    this.isRunning = false;
+                    clearInterval(this.timer);
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
